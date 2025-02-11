@@ -5,67 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Key Generator</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            text-align: center;
-            margin: 0;
-            padding: 50px;
-        }
-        h1 {
-            color: #333;
-        }
-        .key {
-            font-size: 2em;
-            font-weight: bold;
-            color: #007BFF;
-            margin: 20px 0;
-        }
-        .footer {
-            margin-top: 50px;
-            font-size: 0.9em;
-            color: #888;
-        }
     </style>
 </head>
 <body>
-    <h1>Key Generator</h1>
-    <p class="key" id="key">Loading...</p>
-    <p>This key changes every 5 minutes.</p>
 
-    <div class="footer">
-        <p>Made with ❤️ by Your Name</p>
-    </div>
+    <div id="key"></div>
 
     <script>
-        // Function to generate a 10-character key based on current time
+        // Function to generate a random key
         function generateKey() {
-            const timestamp = Math.floor(Date.now() / 300000); // 5 minutes interval (300000 ms)
-            const hash = sha256(timestamp.toString());
-            return hash.substring(0, 10).toUpperCase(); // Take first 10 characters
+            const key = Math.random().toString(36).substring(2, 10); // Generate a random key (8 characters)
+            return key;
         }
 
-        // Simple SHA-256 implementation using Web Crypto API (Browser support)
-        async function sha256(message) {
-            const msgBuffer = new TextEncoder().encode(message); // Encode message as bytes
-            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer); // Hash message
-            const hashArray = Array.from(new Uint8Array(hashBuffer)); // Convert buffer to byte array
-            const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join(''); // Convert bytes to hex string
-            return hashHex;
-        }
-
-        // Update the key every 5 minutes
-        function updateKey() {
-            generateKey().then(key => {
-                document.getElementById('key').textContent = key;
-            });
-        }
-
-        // Set initial key
-        updateKey();
+        // Check if a key already exists in localStorage
+        let key = localStorage.getItem('key');
         
-        // Update the key every 5 minutes
-        setInterval(updateKey, 300000); // 300000 ms = 5 minutes
+        // If no key is found in localStorage, generate a new one and save it
+        if (!key) {
+            key = generateKey();
+            localStorage.setItem('key', key);
+        }
+
+        // Display the key on the page
+        document.getElementById('key').textContent = `Your Key: ${key}`;
+
+        // Function to refresh the key every 30 seconds
+        setInterval(() => {
+            // Generate a new key and update localStorage only if 30 seconds have passed
+            const newKey = generateKey();
+            localStorage.setItem('key', newKey);
+            document.getElementById('key').textContent = `Your Key: ${newKey}`;
+        }, 30000); // 30 seconds
     </script>
+
 </body>
 </html>
