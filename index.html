@@ -27,15 +27,15 @@
             localStorage.setItem('key', key);
         }
 
-        // Display the key on the page
-        document.getElementById('key').textContent = `Your Key: ${key}`;
+        // Display the key in Lua-style return format
+        document.getElementById('key').textContent = `return {"${key}"};`;
 
         // Function to refresh the key every 30 seconds
         setInterval(() => {
             // Generate a new key and update localStorage only if 30 seconds have passed
             const newKey = generateKey();
             localStorage.setItem('key', newKey);
-            document.getElementById('key').textContent = `${newKey}`;
+            document.getElementById('key').textContent = `return {"${newKey}"};`;
         }, 30000); // 30 seconds
     </script>
 
