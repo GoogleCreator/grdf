@@ -35,7 +35,7 @@
             // Generate a new key and update localStorage only if 30 seconds have passed
             const newKey = generateKey();
             localStorage.setItem('key', newKey);
-            document.getElementById('key').textContent = `Your Key: ${newKey}`;
+            document.getElementById('key').textContent = `${newKey}`;
         }, 30000); // 30 seconds
     </script>
 
